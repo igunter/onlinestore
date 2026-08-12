@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@hasSection('meta_title')@yield('meta_title') | @endif{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
@@ -17,6 +17,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    @stack('styles')
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -30,8 +31,9 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Link</a> </li>
-                        <li class="nav-item"><a class="nav-link disabled" aria-disabled="true">Disabled</a> </li>
+                        @if(auth()->user()->is_admin)
+                            <li class="nav-item"><a class="nav-link" href="{{ route('admin.categories.index') }}">Categories</a></li>
+                        @endif
                     </ul>
                     <ul class="navbar-nav ms-auto mb-2 mb-md-0">
                         @guest
@@ -55,7 +57,7 @@
         </nav>
     </header>
 
-    <main class="flex-shrink-0" style="margin-top: 56px">
+    <main class="flex-shrink-0" style="margin-top: @if(auth()->user()->is_admin){{ '96px;' }}@else{{ '56px'}}@endif">
         @yield('content')
     </main>
 
@@ -70,5 +72,6 @@
     @endauth
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    @stack('scripts')
 </body>
 </html>
